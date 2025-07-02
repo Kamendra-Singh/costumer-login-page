@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+
+  <!-- Google Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+ <!-- css link  -->
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+        <header class="navbar">
+          <img src="logo.png" alt="Namdev Finvest" class="logo">
+          <nav class="nav-links">
+            <a href="#dashboard" class="nav-link">Dashboard</a>
+            <a href="#loan-summary" class="nav-link">Loan Summary</a>
+            <a href="#payments" class="nav-link">Payments</a>
+            <a href="#service-requests" class="nav-link">Service Requests</a>
+          </nav>
+    <div class="profile-icon" onclick="toggleSidebar()">
+       <span class="material-symbols-outlined">user_attributes</span>
+    </div>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <button class="close-btn" onclick="toggleSidebar()">✕</button>
+
+    <div>
+      <div class="profile-info">
+        <h3 id="sidebarName">Amit Kumar</h3>
+        <p>Loan ID: <span id="sidebarLoanId">LN123456789</span></p>
+      </div>
+      <div class="details">
+        <div><label>Email:</label><span>amit.kumar@example.com</span></div>
+        <div><label>Mobile:</label><span>+91-9876543210</span></div>
+        <div><label>Last Visit:</label><span>22-May-2025</span></div>
+      </div>
+    </div>
+    
+    <button class="signout-btn" onclick="logout()">Sign Out</button>
+
+  </aside>
+
+  <main>
+   
+
+     <!-- Dashboard Section -->
+<section id="dashboardSection" class="content-section">
+   <div class="content-area">
+      <div class="tag-line">
+        <h4 style="color: #342193;">Welcome to Namdev Finvest Pvt. Ltd.</h4>
+        <h5 style="color: #342193;">हर पल आपके साथ ..</h5>
+      </div>
+  <div class="loan-details">
+    <div class="details-grid">
+      <div class="detail-item"><label>Loan ID</label><span id="loanId">Loading...</span></div>
+      <div class="detail-item"><label>Product</label><span id="product">Loading...</span></div>
+      <div class="detail-item"><label>Scheme</label><span id="scheme">Loading...</span></div>
+      <div class="detail-item"><label>Customer Name</label><span id="customerName">Loading...</span></div>
+      <div class="detail-item"><label>Loan Amount</label><span id="loanAmount">Loading...</span></div>
+      <div class="detail-item"><label>Tenure</label><span id="tenure">Loading...</span></div>
+      <div class="detail-item"><label>Outstanding</label><span id="outstanding">Loading...</span></div>
+      <div class="detail-item"><label>Next EMI Date</label><span id="emiDate">Loading...</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Loan Summary Section -->
+<section id="loanSummarySection" class="content-section" style="display: none;">
+  <div id="loanCard"></div>
+   <div class="loan-actions">
+          <button class="action-btn" type="button">Download Welcome Letter</button>
+          <button class="action-btn" type="button">Download Repayment Schedule</button>
+        </div>
+</section>
+
+<!-- Payments Section -->
+<section id="paymentsSection" class="content-section" style="display: none;">
+  <h2>Payments</h2>
+  <div class="outstanding-emi" id="outstandingEmi">Outstanding EMI: ₹0</div>
+  <button id="payNowBtn">Pay Now</button>
+  <div class="payment-history">
+    <h3>Payment History</h3>
+    <ul id="paymentHistoryList"></ul>
+  </div>
+</section>
+
+
+<!-- Service Requests Section -->
+<section id="serviceRequestsSection" class="content-section" style="display: none;">
+  <div class="service">
+    <h3>your service, our priority</h3>
+    <button class="btn" onclick="openPopup()">
+      <span class="material-icons">add_circle</span>
+      Raise your Concern
+    </button>
+
+  </div>
+
+  <!-- pop  up overlay -->
+   <div class="overlay" id="overlay" onclick="closePopup()"></div>
+
+    <!-- Popup Form -->
+    <div id="popupForm" class="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+      <div class="popup-content">
+    <button class="close-btn" onclick="closePopup()" aria-label="Close">
+      <span class="material-icons">close</span>
+    </button>
+        <h2 id="popupTitle">Raise your Concerns</h2>
+        <form id="userForm" onsubmit="event.preventDefault(); submitForm();">
+          <label for="type">Concern Type</label>
+          <select id="type" name="type" required>
+            <option value="" disabled selected>Select Concern Type</option>
+            <option value="Suggestion">Suggestion</option>
+            <option value="complain">Complain</option>
+            <option value="query">Query</option>
+            <option value="inquiry">Inquiry</option>
+            <option value="others">Others</option> 
+          </select>
+
+          <!-- select type of query -->
+          <label for="query" class="hidden">Type of Query</label>
+          <select name="query" id="query" class="hidden">
+            <option value="" disabled selected>Select Query Type</option>
+            <option value="emi">EMI</option>
+            <option value="cibilissue">CIBIL Issue</option>
+             <option value="roiissue">ROI Issue</option>
+             <option value="paymentissue">Payment Issue</option>
+            <option value="eligibility">Eligibility</option>
+            <option value="documents">Documents</option>
+          </select>
+
+          <!-- select type of inquiry -->
+          <label for="inquiry" class="hidden">Type of Inquiry</label>
+          <select name="inquiry" id="inquiry" class="hidden">
+            <option value="" disabled selected>Select Inquiry Type</option>
+            <option value="soareq">SOA Request</option>
+            <option value="nocreq">NOC Request</option>
+            <option value="forclosure">Foreclosure</option>
+            <option value="insurancerefund">Insurance Refund</option>
+            <option value="topupreq">Top Up Request</option>
+            <option value="dueamountenq">Due Amount Enquiry</option>
+            <option value="other">Others</option>
+          </select>
+
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your full name" required />
+
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required />
+
+          <label for="mobile">Mobile Number</label>
+          <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" maxlength="10" required />
+
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Write your message here" required></textarea>
+
+          <button type="submit" class="submit-btn">Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Service Request List -->
+    <div class="service" id="serviceSection" style="display: none;">
+      <h3>Your Service Requests</h3>
+      <div class="service-request" id="requestList"></div>
+    </div>
+  </div>
+</section>
+
+    </div>
+  </main>
+
+  <script>
+    const userLoanData = {
+      loanId: "LN123456789",
+      product: "New Electric Rickshaw",
+      scheme: "Nerick Regular Scheme BIHAR",
+      customerName: "Amit Kumar",
+      loanAmount: "₹10,00,000",
+      tenure: "120 months",
+      outstanding: "₹4,25,000",
+      emiDate: "10-Jun-2025"
+    };
+
+    function populateLoanDetails(data) {
+      document.getElementById("loanId").textContent = data.loanId;
+      document.getElementById("product").textContent = data.product;
+      document.getElementById("scheme").textContent = data.scheme;
+      document.getElementById("customerName").textContent = data.customerName;
+      document.getElementById("loanAmount").textContent = data.loanAmount;
+      document.getElementById("tenure").textContent = data.tenure;
+      document.getElementById("outstanding").textContent = data.outstanding;
+      document.getElementById("emiDate").textContent = data.emiDate;
+
+      document.getElementById("sidebarName").textContent = data.customerName;
+      document.getElementById("sidebarLoanId").textContent = data.loanId;
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+
+    function updateActiveNav() {
+      const links = document.querySelectorAll(".nav-link");
+      const hash = window.location.hash || "#dashboard";
+      links.forEach(link => {
+        if (link.getAttribute("href") === hash) {
+          link.classList.add("active");
+        } else {
+          link.classList.remove("active");
+        }
+      });
+    }
+
+    window.addEventListener("hashchange", updateActiveNav);
+    window.addEventListener("load", () => {
+      populateLoanDetails(userLoanData);
+      updateActiveNav();
+    });
+
+
+
+function logout() {
+
+   localStorage.clear(); 
+  sessionStorage.clear();
+  localStorage.removeItem("user");
+    window.location.href = "index.html"; 
+}
+
+  </script>
+
+<script>
+  function showSectionByHash() {
+  const hash = window.location.hash || "#dashboard";
+  const sections = {
+    "#dashboard": "dashboardSection",
+    "#loan-summary": "loanSummarySection",
+    "#payments": "paymentsSection",
+    "#service-requests": "serviceRequestsSection"
+  };
+
+  Object.values(sections).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
+
+  const activeSection = sections[hash];
+  if (activeSection) {
+    const sectionEl = document.getElementById(activeSection);
+    if (sectionEl) sectionEl.style.display = "block";
+  }
+}
+
+window.addEventListener("hashchange", () => {
+  updateActiveNav();
+  showSectionByHash();
+});
+
+window.addEventListener("load", () => {
+  populateLoanDetails(userLoanData);
+  updateActiveNav();
+  showSectionByHash();
+});
+
+
+</script>
+
+
+<!-- loan summary section -->
+
+ <script>
+    const loanData = {
+      customerName: "Amit Kumar",
+      loanId: "LN123456789",
+      product: "New Electric Rickshaw",
+      loanAmount: "₹2,00,000",
+      instalmentAmount: "₹8,000",
+      loanStatus: "Active",
+      productName: "Personal Loan",
+      totalTenure: "24 months",
+      remainingTenure: "12 months",
+      roi: "10.5%",
+      firstInstalment: "5th June 2023",
+      nextInstalment: "5th June 2025"
+    };
+
+    function populateLoanSummary(data) {
+      const card = document.getElementById("loanCard");
+      const statusClass = data.loanStatus.toLowerCase() === "active" ? "badge-active" : "badge-closed";
+
+      card.innerHTML = `
+        <div class="loan-detail"><strong>Customer Name:</strong><span>${data.customerName}</span></div>
+        <div class="loan-detail"><strong>Loan ID:</strong><span>${data.loanId}</span></div>
+        <div class="loan-detail"><strong>Product:</strong><span>${data.product}</span></div>
+        <div class="loan-detail"><strong>Loan Amount:</strong><span>${data.loanAmount}</span></div>
+        <div class="loan-detail"><strong>Instalment Amount:</strong><span>${data.instalmentAmount}</span></div>
+        <div class="loan-detail"><strong>Loan Status:</strong><span class="status-badge ${statusClass}">${data.loanStatus}</span></div>
+        <div class="loan-detail"><strong>Product Name:</strong><span>${data.productName}</span></div>
+        <div class="loan-detail"><strong>Total Tenure:</strong><span>${data.totalTenure}</span></div>
+        <div class="loan-detail"><strong>Remaining Tenure:</strong><span>${data.remainingTenure}</span></div>
+        <div class="loan-detail"><strong>Rate of Interest (ROI):</strong><span>${data.roi}</span></div>
+        <div class="loan-detail"><strong>First Instalment Date:</strong><span>${data.firstInstalment}</span></div>
+        <div class="loan-detail"><strong>Next Instalment Date:</strong><span>${data.nextInstalment}</span></div>
+      `;
+    }
+
+    // Initialize on page load
+    populateLoanSummary(loanData);
+
+  </script>
+
+
+<!-- payment script -->
+
+<script>
+  const paymentData = {
+    outstandingEmi: 8000,
+    paymentHistory: [
+      { date: 'April 2025', amount: 8000, status: 'Paid' },
+      { date: 'March 2025', amount: 8000, status: 'Paid' }
+    ]
+  };
+
+  function populatePayments(data) {
+    document.getElementById('outstandingEmi').textContent =
+      `Outstanding EMI: ₹${data.outstandingEmi.toLocaleString()}`;
+
+    const historyList = document.getElementById('paymentHistoryList');
+    historyList.innerHTML = '';
+
+    data.paymentHistory.forEach(record => {
+      const li = document.createElement('li');
+      li.textContent = `${record.date} - ₹${record.amount.toLocaleString()} - ${record.status}`;
+      historyList.appendChild(li);
+    });
+
+    document.getElementById('payNowBtn').onclick = () => {
+      alert('Payment successful!');
+    };
+  }
+
+  // When #paymentsSection is shown, populate it
+ 
+    populatePayments(paymentData);
+
+</script>
+
+<!-- service form -->
+
+<!-- Script -->
+<script>
+
+  function openPopup() {
+    document.getElementById("popupForm").style.visibility = "visible";
+    document.getElementById("popupForm").style.opacity = "1";
+    document.getElementById("overlay").style.display = "block";
+  }
+
+  function closePopup() {
+    document.getElementById("popupForm").style.visibility = "hidden";
+    document.getElementById("popupForm").style.opacity = "0";
+    document.getElementById("overlay").style.display = "none";
+  }
+
+  function generateRequestID() {
+    return 'SR' + Math.floor(100000000 + Math.random() * 900000000);
+  }
+
+  function getToday() {
+    const today = new Date();
+    return today.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  function submitForm() {
+    const type = document.getElementById("type").value;
+    const name = document.getElementById("name").value;
+    const mobile = document.getElementById("mobile").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+
+    if (!type || !name || !mobile || !email || !message) {
+      alert("Please fill all fields.");
+      return;
+    }
+
+    closePopup();
+
+    // Show appropriate alert message
+    if (type) {
+      alert("Concern submitted successfully! Your service request has been created.");
+    } 
+    const requestId = generateRequestID();
+    const createdDate = getToday();
+
+    const requestHTML = `
+      <div class="request-item" id="${requestId}">
+        <span class="material-icons">support_agent</span>
+        <div class="request-details">
+          <h4>Request ID: ${requestId}</h4>
+          <p><strong>Status:</strong> Open</p>
+          <p><strong>Created On:</strong> ${createdDate}</p>
+          <p><strong>Description:</strong> ${type} - ${message}</p>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("requestList").innerHTML += requestHTML;
+    document.getElementById("serviceSection").style.display = "block";
+  }
+
+  
+  document.getElementById("type").addEventListener("change", function () {
+    const querySelect = document.getElementById("query");
+    const inquirySelect = document.getElementById("inquiry");
+    const queryLabel = document.querySelector("label[for='query']");
+    const inquiryLabel = document.querySelector("label[for='inquiry']");
+
+    if (this.value === "query") {
+      querySelect.classList.remove("hidden");
+      queryLabel.classList.remove("hidden");
+      inquirySelect.classList.add("hidden");
+      inquiryLabel.classList.add("hidden");
+    } else if (this.value === "inquiry") {
+      inquirySelect.classList.remove("hidden");
+      inquiryLabel.classList.remove("hidden");
+      querySelect.classList.add("hidden");
+      queryLabel.classList.add("hidden");
+    } else {
+      querySelect.classList.add("hidden");
+      queryLabel.classList.add("hidden");
+      inquirySelect.classList.add("hidden");
+      inquiryLabel.classList.add("hidden");
+    }
+  });
+</script>
+
+
+
+
+
+</body>
+</html>

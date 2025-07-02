@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+  
+  <!-- link css -->
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+
+  <div class="login-container">
+    <img src="/logo.png" alt="Logo" />
+    <h2>Login</h2>
+
+    <!-- Input for mobile or loan ID -->
+    <div class="form-group">
+      <label for="userInput">Mobile Number / Loan ID</label>
+      <input type="text" id="userInput" placeholder="Enter Mobile Number or Loan ID" maxlength="20"/>
+    </div>
+
+    <!-- OTP -->
+    <div class="form-group">
+      <label for="otp">OTP</label>
+      <input type="text" id="otp" placeholder="Enter OTP" maxlength="6" disabled />
+    </div>
+
+    <!-- Button -->
+    <button class="btn" onclick="handleLogin()">Login</button>
+
+    <!-- Message display -->
+    <div class="message" id="message"></div>
+  </div>
+
+  <!-- JavaScript -->
+   <script>
+  const userInput = document.getElementById("userInput");
+  const otpInput = document.getElementById("otp");
+  const message = document.getElementById("message");
+  let otpEnabled = false;
+  let generatedOTP = "";
+
+  // Allow any characters for loan ID input, limit length
+  userInput.addEventListener("input", function () {
+    this.value = this.value.slice(0, 20);
+  });
+
+  otpInput.addEventListener("input", function () {
+    this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);
+  });
+
+  function generateOTP() {
+    return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit
+  }
+
+  function handleLogin() {
+    const userVal = userInput.value.trim();
+    const otp = otpInput.value.trim();
+
+    message.style.color = "red";
+
+    if (!otpEnabled) {
+      if (!userVal) {
+        message.textContent = "Please enter your Mobile Number or Loan ID.";
+        return;
+      }
+
+      // If input is exactly 10 digits, treat as mobile number
+      const isMobile = /^\d{10}$/.test(userVal);
+      if (isMobile && !/^([6-9]\d{9})$/.test(userVal)) {
+        message.textContent = "Enter a valid 10-digit mobile number.";
+        return;
+      }
+
+      // Valid input: generate OTP
+      generatedOTP = generateOTP();
+      otpInput.disabled = false;
+      otpInput.focus();
+      otpEnabled = true;
+
+      message.style.color = "blue";
+      message.textContent = `OTP has been sent: ${generatedOTP} (For demo only)`;
+      return;
+    }
+
+    // OTP validation
+    if (otp !== generatedOTP) {
+      message.style.color = "red";
+      message.textContent = "Invalid OTP. Please try again.";
+      setTimeout(() => location.reload(), 2000);
+    } else {
+      message.style.color = "green";
+      message.textContent = "Login successful!";
+      window.location.href = "/dashboard.html";
+    }
+  }
+</script>
+
+
+</body>
+</html>
